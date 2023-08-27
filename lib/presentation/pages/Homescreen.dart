@@ -36,13 +36,7 @@ class Homescreen extends StatelessWidget {
     return name ?? 'NA';
   }
 
-  var items2 = [
-    'City',
-    'city1',
-    'city2',
-    'city3',
-    'city4',
-  ];
+  var items2 = dynamicItemsList;
 
   int _selected = 0;
 
@@ -513,9 +507,9 @@ class Homescreen extends StatelessWidget {
                               // After selecting the desired option,it will
                               // change button value to selected value
                               onChanged: (String? newValue) {
-                                // setState(() {
-                                //   dropdownvalue2 = newValue!;
-                                // });
+                                setState(() {
+                                  dropdownvalue2 = newValue!;
+                                });
                               },
                             ),
                           ),
