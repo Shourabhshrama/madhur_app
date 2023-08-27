@@ -42,8 +42,13 @@ Future<void> main() async {
             create: (context) => ResetPassWordBloc(
                 authenticateUser: locator<AuthenticateUser>())),
         BlocProvider<StateBloc>(
-            create: (context) =>
-                StateBloc(useCase: locator<LocationUseCase>()))
+                    create: (context) {
+                        final stateBloc = StateBloc(useCase: locator<LocationUseCase>());
+                        if (stateBloc == null) {
+                            throw Exception('StateBloc not initialized');
+                        }
+                        return stateBloc;
+                    })
       ],
       builder: (context, child) {
         return MaterialApp(
