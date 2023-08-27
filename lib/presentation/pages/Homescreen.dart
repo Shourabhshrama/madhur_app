@@ -495,23 +495,34 @@ class Homescreen extends StatelessWidget {
 
                               hint: const Text('city'),
                               // Initial Value
-                              value: dropdownvalue2,
-
-                              // Down Arrow Icon
-                              icon: const Icon(
-                                Icons.keyboard_arrow_down,
-                                color: Color(0xffF1B03C),
+                              child: BlocBuilder<StateBloc, StateState>(
+                                builder: (context, state) {
+                                  if (state is LocationLoading) {
+                                    return CircularProgressIndicator();
+                                  } else if (state is LocationLoaded) {
+                                    final selectedState = context.watch<StateBloc>().selectedState; // Read selected state
+                                    final stateResponse = state.response;
+                                    final states = stateResponse.data;
+                                    return DropdownButton<StateModel>(
+                                      value: selectedState,
+                                      onChanged: (newValue) {
+                                        // Update the selected state using the BLoC
+                                        context.read<StateBloc>().add(StateSelectedEvent(newValue!));
+                                      },
+                                      items: states.map((state) {
+                                        return DropdownMenuItem<StateModel>(
+                                          value: state,
+                                          child: Text(state.name),
+                                        );
+                                      }).toList(),
+                                    );
+                                  } else if (state is LocationLoadingFailed) {
+                                    return Text('Failed to load data: ${state.error}');
+                                  } else {
+                                    return const SizedBox(); // Handle other states if needed
+                                  }
+                                },
                               ),
-
-                              // Array list of items
-                              items: items2.map((String items) {
-                                return DropdownMenuItem(
-                                  value: items,
-                                  child: Text(items),
-                                );
-                              }).toList(),
-                              // After selecting the desired option,it will
-                              // change button value to selected value
                               onChanged: (String? newValue) {
                                 // setState(() {
                                 //   dropdownvalue2 = newValue!;
