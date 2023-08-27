@@ -18,7 +18,11 @@ class StateBloc extends Bloc<StateEvent, StateState> {
       createdAt: '',
       updatedAt: '',
       v: 0); // Add this property
-  StateBloc({required this.useCase}) : super(InitialState());
+  StateBloc({required this.useCase}) : super(InitialState()) {
+      if (useCase == null) {
+          throw Exception('useCase not initialized');
+      }
+  }
 
   @override
   Stream<StateState> mapEventToState(StateEvent event) async* {
